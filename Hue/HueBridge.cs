@@ -15,17 +15,18 @@ namespace Hue
         public UrlProvider Urls;
         public ConcurrentDictionary<string, HueLight> Lights { get; set; }
 
-        public event EventHandler PushButtonOnBridge;  
+        public event EventHandler PushButtonOnBridge;
+
+        public readonly string IP; 
 
         private readonly string appname = "winhueapp";
-        private readonly string ip;
         private Timer timer;
         private bool IsAuthenticated = false;
         
         public HueBridge(string ip)
         {
             Urls = new UrlProvider(ip);
-            this.ip = ip;
+            IP = ip;
             // not needed - clock for every 1 sec update status. 
             //timer = new Timer(StatusCheckEvent, null, 0, 1000);
         }

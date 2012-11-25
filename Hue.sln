@@ -8,6 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		readme.md = readme.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HueTests", "HueTests\HueTests.csproj", "{F7445D45-3870-44D6-94D7-569DBE483B2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +20,10 @@ Global
 		{FA43AF0D-9F77-4695-849D-FD26367C9089}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA43AF0D-9F77-4695-849D-FD26367C9089}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA43AF0D-9F77-4695-849D-FD26367C9089}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7445D45-3870-44D6-94D7-569DBE483B2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7445D45-3870-44D6-94D7-569DBE483B2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7445D45-3870-44D6-94D7-569DBE483B2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7445D45-3870-44D6-94D7-569DBE483B2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,55 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Hue
 {
+    /// <summary>
+    /// Locates the Philips Hue lights bridge using SSDP 
+    /// </summary>
     public static class HueBridgeLocator
     {
-        public static async Task<HueBridge> LocateBridge(List<string> IPs)
+        public static HueBridge Locate()
         {
-            // http://www.nerdblog.com/2012/10/a-day-with-philips-hue.html - description.xml retrieval
+            return LocateAsync().Result;
+        }
 
-            // This shoudl be a UDP 
-
-
-            //IPs.AsParallel().ForAll(async ip =>
-            foreach (var ip in IPs)
+        public static async Task<HueBridge> LocateAsync()
+        {
+            if (UPnP.NAT.Discover())
             {
-                try
+                var endpoints = UPnP.NAT.DiscoveredEndpoints
+                    .Where(s => s.EndsWith("/description.xml")).ToList();
+                foreach (var endpoint in endpoints)
                 {
-                    // Easy protocol discovery
-                    var url = "http://" + ip + "/description.xml";
-                    var http = new HttpClient {Timeout = TimeSpan.FromMilliseconds(2000)};
-
-                    var res = await http.GetStringAsync(url);
-                    if (!string.IsNullOrWhiteSpace(res))
+                    if (await IsHue(endpoint))
                     {
-                        // we can also do this:
-                        //var root = (root) new XmlSerializer(typeof (root)).Deserialize(stream);
-                        //var name = root.device.friendlyName;
-
-                        var bridgeName = XElement.Parse(res)
-                                                    .Descendants(XName.Get("device", @"urn:schemas-upnp-org:device-1-0"))
-                                                    .Descendants(XName.Get("friendlyName", "urn:schemas-upnp-org:device-1-0"))
-                                                    .First()
-                                                    .Value;
-
-                        if (!string.IsNullOrWhiteSpace(bridgeName))
-                            return new HueBridge(ip); // support only first bridge
+                        var ip = endpoint.Replace("http://", "").Replace("/description.xml", "");
+                        return new HueBridge(ip);
                     }
                 }
-                catch (Exception ex)
-                {
-                    //catch all web exceptions - no router in sight
-                }
+                return null;
             }
-
             return null;
+        }
+
+        // http://www.nerdblog.com/2012/10/a-day-with-philips-hue.html - description.xml retrieval
+        private static async Task<bool> IsHue(string discoveryUrl)
+        {
+            var http = new HttpClient {Timeout = TimeSpan.FromMilliseconds(2000)};
+            var res = await http.GetStringAsync(discoveryUrl);
+            if (!string.IsNullOrWhiteSpace(res))
+            {
+                if (res.Contains("Philips hue bridge"))
+                    return true;
+            }
+            return false;
         }
     }
 }

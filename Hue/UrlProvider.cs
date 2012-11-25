@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Hue.Properties;
+﻿using Hue.Properties;
 
 namespace Hue
 {
@@ -14,9 +10,11 @@ namespace Hue
         {
             this.ip = ip;
 
-            if (!ip.StartsWith("http://")) this.ip = "http://" + this.ip;
+            if (!this.ip.StartsWith("http://"))
+                this.ip = "http://" + this.ip;
 
             this.ip = this.ip.TrimEnd('/');
+            this.ip = this.ip.Replace("/description.xml","");
         }
 
         internal string GetStatusUrl()
