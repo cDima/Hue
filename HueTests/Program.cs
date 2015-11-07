@@ -12,6 +12,7 @@ namespace HueTests
             if (bridge != null)
             {
                 bridge.PushButtonOnBridge += bridge_PushButtonOnBridge;
+
                 bridge.FlashLights();
             }
 

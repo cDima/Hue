@@ -17,7 +17,9 @@ namespace Hue
     {
         public static HueBridge Locate()
         {
-            return LocateAsync().Result;
+            //https://www.meethue.com/api/nupnp
+            //return LocateAsync().Result;
+            return new HueBridge("192.168.0.102");
         }
 
         public static async Task<HueBridge> LocateAsync()
@@ -43,11 +45,16 @@ namespace Hue
         private static async Task<bool> IsHue(string discoveryUrl)
         {
             var http = new HttpClient {Timeout = TimeSpan.FromMilliseconds(2000)};
-            var res = await http.GetStringAsync(discoveryUrl);
-            if (!string.IsNullOrWhiteSpace(res))
+            try {
+                var res = await http.GetStringAsync(discoveryUrl);
+                if (!string.IsNullOrWhiteSpace(res))
+                {
+                    if (res.Contains("Philips hue bridge"))
+                        return true;
+                }
+            } catch
             {
-                if (res.Contains("Philips hue bridge"))
-                    return true;
+                return false;
             }
             return false;
         }

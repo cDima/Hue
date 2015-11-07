@@ -29,6 +29,7 @@ namespace Hue
             IP = ip;
             // not needed - clock for every 1 sec update status. 
             //timer = new Timer(StatusCheckEvent, null, 0, 1000);
+            InitializeRouter();
         }
 
         public async Task<bool> InitializeRouter()
@@ -88,7 +89,7 @@ namespace Hue
 
             while (retryCount < retryMax) // wait a minute, check each second
             {
-                var body = "{\"username\": \"" + appname + "\", \"devicetype\":\"" + appname + "\"}";
+                var body = "{\"devicetype\":\"" + appname + "\"}";
                 var responseFromServer = await HttpRestHelper.Post(Urls.GetRegisterUrl(), body);
 
                 if (responseFromServer.Contains("link button not pressed"))
@@ -105,8 +106,8 @@ namespace Hue
                 {
                     dynamic obj = DynamicJsonConverter.Parse(responseFromServer);
                     // sample response: [{"error":{"type":7,"address":"/username","description":"invalid value, WinHueApp, for parameter, username"}},{"success":{"username":"b7a7e52143446771752ae6e1c69b0a3"}}]
-                    
-                    string key = obj[1].success.username;
+
+                    string key = ((dynamic[])obj)[0].success.username;
 
                     if (!string.IsNullOrWhiteSpace(key))
                     {
